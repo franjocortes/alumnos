@@ -91,3 +91,13 @@ class AlumnoDelete(View):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
+
+
+class AlumnosCompletoListView(ListView):
+    model = Alumno
+    template_name = 'alumnos/lista_completa.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Alumnos'
+        return context

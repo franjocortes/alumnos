@@ -1,0 +1,33 @@
+{% extends 'list.html' %}
+
+{% block thead-row %}
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Promedio</th>
+    <th>Aprobado</th>
+{% endblock %}
+
+{% block tbody %}
+
+    {% if object_list %}
+        {% for alumno in object_list %}
+            <tr>
+                <td>{{ alumno.id }}</td>
+                <td>{{ alumno.nombre }}</td>
+                <td>{{ alumno.nota }}</td>
+                <td>
+                    {% if alumno.nota >= 3 and alumno.nota <= 5 %}
+                        SI
+                    {% endif %}
+                    {% if alumno.nota < 3 %}
+                        NO
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <h3>No hay alumnos cargados</h3>
+    {% endif %}
+
+
+{% endblock %}
