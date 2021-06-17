@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumnos</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'lib/materializecss/materialize.min.css' %}">
+
+    {% block CSS-extra %}
+    {% endblock %}
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<main class="container">
+
+    <h1>{{ title }}</h1>
+
+    <section>
+        <div class="actions">
+            {% block actions %}
+            {% endblock %}
+        </div>
+        <div class="section">
+            {% block section %}
+            {% endblock %}
+        </div>
+    </section>
+</main>
+
+<!-- Scripts Base -->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="{% static 'lib/materializecss/materialize.min.js' %}"></script>
+
+<script src="{% static 'lib/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'js/messages.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.sidenav').sidenav();
+    });
+</script>
+
+{% block JS-extra %}
+{% endblock %}
+
+</body>
+</html>

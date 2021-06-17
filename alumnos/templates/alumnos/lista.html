@@ -1,0 +1,81 @@
+{% extends 'list.html' %}
+
+{% load static %}
+
+{% block actions %}
+    <a href="{{ formpage }}" class="waves-effect waves-light btn"><i class="material-icons left">add</i> Nuevo</a>
+{% endblock %}
+
+{% block thead-row %}
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Promedio</th>
+    <th></th>
+{% endblock %}
+
+{% block tbody %}
+
+    {% if object_list %}
+        {% for alumno in object_list %}
+            <tr>
+                <td>{{ alumno.id }}</td>
+                <td>{{ alumno.nombre }}</td>
+                <td>{{ alumno.nota }}</td>
+                <td>
+                    <a href="{% url 'alumnos:alumnos_edit' alumno.id %}" class="btn-floating btn-large waves-effect waves-light yellow">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a class="btn-floating btn-large waves-effect waves-light red" onclick="Delete({{ alumno.id }})">
+                        <i class="material-icons">delete</i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <h3>No hay alumnos cargados</h3>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block JS-extra %}
+
+    <script src="{% static 'lib/js-cookie-3.0.0/js.cookie.min.js' %}"></script>
+
+    <script type="application/javascript">
+        function Delete(id) {
+            var csrftoken = Cookies.get('csrftoken');
+            function csrfSafeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            message_question(`¿Seguro quiere eliminar el alumno #${id}?`, function () {
+                // función AJAX
+                $.ajax({
+                    url: "{% url 'alumnos:alumnos_delete' %}",
+                    type: "POST",
+                    data: {'id': id},
+                    dataType: "json",
+                }).done(function (data) {
+                    if (!data.hasOwnProperty("error")) {
+                        message_info('', '', function () {
+                            location.reload();
+                        });
+                        return false;
+                    }
+                    message_error(data.error);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    message_error(textStatus + ": " + errorThrown);
+                }).always(function (data) {
+                })
+            })
+        }
+    </script>
+{% endblock %}

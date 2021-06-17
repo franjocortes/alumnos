@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block actions %}
+    <button type="submit" form="main_form" class="waves-effect waves-light btn"><i class="material-icons left">save</i> Guardar</button>
+    <a href="{{ listpage }}" class="waves-effect waves-light btn"><i class="material-icons left">cancel</i> Cancelar</a>
+{% endblock %}
+
+{% block section %}
+    <div class="row">
+        <form class="col s12" id="main_form">
+            {% csrf_token %}
+            <input type="hidden" name="action_form" value="{{ action_form }}">
+            {{ form.as_p }}
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block CSS-extra %}
+    <link rel="stylesheet" href="{% static 'lib/sweetalert2/sweetalert2.min.css' %}">
+{% endblock %}
+
+{% block JS-extra %}
+
+    <script>
+        $('#main_form').on('submit', function (e) {
+            e.preventDefault();
+            const params = $(this).serializeArray();
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: params,
+                dataType: 'json',
+            }).done(function (data) {
+                if (!data.hasOwnProperty('error')) {
+                    let msg = 'Guardado correctamente';
+                    {% if action_form == 'edit' %}
+                        msg = 'Modificado correctamente';
+                    {% endif %}
+                    message_info(msg, '{{ listpage }}');
+                    return false;
+                }
+                message_error(data.error);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.error(textStatus + ': ' + errorThrown);
+            }).always(function (data) {
+            });
+        });
+    </script>
+{% endblock %}

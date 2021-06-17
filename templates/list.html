@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block section %}
+    <table>
+        <thead>
+        <tr>
+            {% block thead-row %}
+            {% endblock %}
+        </tr>
+        </thead>
+        <tbody>
+        {% block tbody %}
+        {% endblock %}
+        </tbody>
+    </table>
+{% endblock %}
